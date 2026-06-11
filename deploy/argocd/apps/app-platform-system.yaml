@@ -1,0 +1,27 @@
+# Platform system components: today, the preview-environment janitor.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-system
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Acr86/andamio.git
+    targetRevision: main
+    path: deploy/kustomize/platform
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 2m

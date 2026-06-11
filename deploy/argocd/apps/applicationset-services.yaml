@@ -1,0 +1,44 @@
+# One Application per directory under deploy/kustomize/services/*/overlays/local.
+# This generator is the self-service punchline: `platform new service` renders
+# manifests, the merge to main makes the service appear here — nobody edits
+# ArgoCD configuration to onboard a service.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: services
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/Acr86/andamio.git
+        revision: main
+        directories:
+          - path: deploy/kustomize/services/*/overlays/local
+  template:
+    metadata:
+      name: 'svc-{{ index .path.segments 3 }}'
+      labels:
+        app.kubernetes.io/part-of: andamio
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Acr86/andamio.git
+        targetRevision: main
+        path: '{{ .path.path }}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: services
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 2m

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: preview-janitor
+---
+# Cluster-scoped because namespaces are cluster-scoped objects. The role is
+# deliberately narrow: the janitor can list and delete namespaces and read
+# ArgoCD Applications — nothing else. It cannot touch workloads directly.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: preview-janitor
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "delete"]
+  - apiGroups: ["argoproj.io"]
+    resources: ["applications"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: preview-janitor
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: preview-janitor
+subjects:
+  - kind: ServiceAccount
+    name: preview-janitor
+    namespace: platform-system

@@ -1,0 +1,47 @@
+# The preview-environment janitor. Runs the same `platform` CLI (same image,
+# same unit-tested decision rules) a developer runs locally:
+#   - TTL rule: namespaces whose andamio.dev/expires-at deadline passed
+#   - orphan rule: preview namespaces whose Application no longer exists
+#     (PR closed), after a grace period
+# This is the cost story for ephemeral environments: nothing survives its
+# pull request by more than one janitor interval plus grace.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: preview-janitor
+spec:
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 300
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: preview-janitor
+        spec:
+          serviceAccountName: preview-janitor
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: janitor
+              image: ghcr.io/acr86/andamio/platform-cli:main
+              args: ["preview", "gc", "--orphans"]
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
+                limits:
+                  cpu: 100m
+                  memory: 128Mi

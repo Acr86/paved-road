@@ -1,0 +1,77 @@
+# Ephemeral preview environments: one complete environment per pull request
+# labelled `preview`. The matrix crosses open labelled PRs with every service
+# that ships a preview overlay, so the namespace pr-<N> contains the full
+# stack at the PR's revision.
+#
+# Lifecycle: label added -> environment materializes; PR closed or label
+# removed -> the Application is pruned. The namespace itself is reclaimed by
+# the janitor's orphan rule (ArgoCD does not delete namespaces it created).
+#
+# The GitHub API is polled anonymously (public repo): requeue stays at 300s
+# to respect unauthenticated rate limits. Mount a token secret to poll
+# faster — see docs/runbooks/rb-001-preview-not-collected.md.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: previews
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - pullRequest:
+              github:
+                owner: Acr86
+                repo: andamio
+                labels:
+                  - preview
+              requeueAfterSeconds: 300
+          - git:
+              repoURL: https://github.com/Acr86/andamio.git
+              revision: main
+              directories:
+                - path: deploy/kustomize/services/*/overlays/preview
+  template:
+    metadata:
+      name: 'pr-{{ .number }}-{{ index .path.segments 3 }}'
+      labels:
+        app.kubernetes.io/part-of: andamio
+        andamio.dev/preview: "true"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Acr86/andamio.git
+        targetRevision: '{{ .head_sha }}'
+        path: '{{ .path.path }}'
+        kustomize:
+          images:
+            - 'ghcr.io/acr86/andamio/{{ index .path.segments 3 }}=ghcr.io/acr86/andamio/{{ index .path.segments 3 }}:pr-{{ .number }}'
+          patches:
+            - target:
+                kind: Ingress
+                name: '{{ index .path.segments 3 }}'
+              patch: |-
+                - op: replace
+                  path: /spec/rules/0/host
+                  value: pr-{{ .number }}.{{ index .path.segments 3 }}.127.0.0.1.nip.io
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'pr-{{ .number }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        managedNamespaceMetadata:
+          labels:
+            andamio.dev/preview: "true"
+            andamio.dev/pr: '{{ .number }}'
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 2m
