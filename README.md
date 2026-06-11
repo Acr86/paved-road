@@ -13,9 +13,9 @@ GCP.
 
 Paved Road is a working reference implementation of an internal developer
 platform — the *paved road* a product team takes by default to go from "I need
-a new service" to "it is deployed, observed, and safe to change". The core runs entirely on a laptop — service catalog, scaffolder,
-CI/CD pipeline, preview environments, dashboards and burn-rate alerts — with
-no cloud account required. The cloud-facing layers (Terraform for AWS and
+a new service" to "it is deployed, observed, and safe to change". The core runs
+entirely on a laptop — service catalog, scaffolder, CI/CD pipeline, preview
+environments, dashboards and burn-rate alerts — with no cloud account required. The cloud-facing layers (Terraform for AWS and
 GCP) ship as blueprints that pass the same gates code does, with the
 reasoning recorded in ADRs. It is opinionated by design: every choice here is
 one I would defend in a design review, and most are written down in
