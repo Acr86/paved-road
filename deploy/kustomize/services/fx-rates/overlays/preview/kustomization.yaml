@@ -1,8 +1,12 @@
 # Preview overlay: one instance per labelled pull request. The ApplicationSet
-# sets the namespace (pr-<number>), the image tag (pr-<number>) and patches
-# the ingress host — this overlay only declares the shape.
+# sets the namespace (pr-<number>), overrides the image tag (pr-<number>) and
+# patches the ingress host — this overlay only declares the shape. The `main`
+# tag below is the fallback used by the offline simulation (make preview).
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base
   - ingress.yaml
+images:
+  - name: ghcr.io/acr86/andamio/fx-rates
+    newTag: main
