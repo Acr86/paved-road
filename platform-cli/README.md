@@ -1,6 +1,6 @@
 # platform-cli
 
-The `platform` command: golden-path tooling for the paved-road reference platform.
+The `platform` command: golden-path tooling for the Paved Road reference platform.
 
 ```bash
 uv tool install ./platform-cli      # or: uvx --from ./platform-cli platform --help

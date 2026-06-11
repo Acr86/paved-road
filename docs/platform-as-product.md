@@ -1,6 +1,6 @@
 # Platform as a product
 
-paved-road is built the way a product team would build it: it has customers with jobs to be done, a
+Paved Road is built the way a product team would build it: it has customers with jobs to be done, a
 paved road whose friction is deliberately measured, metrics that say whether the platform is
 working, and feedback loops that change the product when it fights its users. This document is the
 product spec behind the engineering.
