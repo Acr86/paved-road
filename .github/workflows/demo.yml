@@ -13,6 +13,9 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-latest
+    env:
+      VHS_VERSION: "0.11.0"
+      TTYD_VERSION: "1.7.7"
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
@@ -21,13 +24,25 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "platform-cli/uv.lock"
 
-      - name: Warm the CLI environment so the recording shows commands, not installs
-        run: uv sync --project platform-cli --extra dev
+      - name: Install the CLI as a real command (so the recording shows `platform ...`)
+        run: uv tool install ./platform-cli
+
+      - name: Install vhs, ttyd and ffmpeg (pinned; the action's installer is flaky)
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          sudo curl -fsSL "https://github.com/tsl0922/ttyd/releases/download/${TTYD_VERSION}/ttyd.x86_64" -o /usr/local/bin/ttyd
+          sudo chmod +x /usr/local/bin/ttyd
+          tmp=$(mktemp -d)
+          curl -fsSL "https://github.com/charmbracelet/vhs/releases/download/v${VHS_VERSION}/vhs_${VHS_VERSION}_Linux_x86_64.tar.gz" | tar xz -C "$tmp"
+          sudo install "$(find "$tmp" -name vhs -type f | head -n1)" /usr/local/bin/vhs
+          vhs --version && ttyd --version && ffmpeg -version | head -n1
 
       - name: Render the tape
-        uses: charmbracelet/vhs-action@59641cdc7fadf3978db65eb8c6937ea2752f4ec3 # v2
-        with:
-          path: docs/demo/golden-path.tape
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          vhs docs/demo/golden-path.tape
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
