@@ -1,0 +1,3 @@
+2026-06-07T22:01:11.0000001Z Preparing the environment
+2026-06-07T22:01:12.0000002Z Everything looked normal until it did not
+2026-06-07T22:01:13.0000003Z ##[error]Process completed with exit code 137.

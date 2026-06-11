@@ -1,0 +1,3 @@
+2026-06-07T20:15:02.1182265Z #5 [builder 2/6] COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /usr/local/bin/uv
+2026-06-07T20:15:32.3320901Z #5 ERROR: failed to copy: read tcp 172.17.0.2:39866->140.82.113.33:443: connection reset by peer
+2026-06-07T20:15:32.4419887Z ##[error]Process completed with exit code 1.

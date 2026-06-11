@@ -1,0 +1,3 @@
+2026-06-07T21:40:18.2210444Z FAIL - rendered/deploy_kustomize_services_fx-rates_overlays_local.yaml - main - Deployment/fx-rates: container "app" must declare resources.limits — unbounded containers starve neighbors
+2026-06-07T21:40:18.2310081Z 90 tests, 89 passed, 0 warnings, 1 failures, 0 exceptions
+2026-06-07T21:40:18.3401211Z ##[error]Process completed with exit code 1.

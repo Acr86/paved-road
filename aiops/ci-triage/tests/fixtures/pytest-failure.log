@@ -1,0 +1,7 @@
+2026-06-07T18:21:09.1052711Z ============================= test session starts ==============================
+2026-06-07T18:21:09.1053290Z platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.6.0
+2026-06-07T18:21:11.5810022Z tests/test_rates.py::TestQuoteContract::test_inverse_rates_are_consistent FAILED
+2026-06-07T18:21:11.5915891Z E       AssertionError: assert Decimal('0.000213') < Decimal('0.0001')
+2026-06-07T18:21:11.6017734Z FAILED tests/test_rates.py::TestQuoteContract::test_inverse_rates_are_consistent
+2026-06-07T18:21:11.6118420Z =========================== 1 failed, 11 passed in 2.41s ===========================
+2026-06-07T18:21:11.7332105Z ##[error]Process completed with exit code 1.
