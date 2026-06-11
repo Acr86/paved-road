@@ -17,6 +17,7 @@ _USD_MID: dict[str, Decimal] = {
     "EUR": Decimal("0.9210"),
     "GBP": Decimal("0.7890"),
     "CAD": Decimal("1.3620"),
+    "CHF": Decimal("0.7980"),
     "BRL": Decimal("5.4310"),
     "JPY": Decimal("151.2400"),
 }

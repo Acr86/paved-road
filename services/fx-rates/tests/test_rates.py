@@ -33,6 +33,9 @@ class TestQuoteContract:
         with pytest.raises(UnknownCurrencyError):
             quote("USD", "XYZ")
 
+    def test_chf_is_quoted(self) -> None:
+        assert quote("USD", "CHF") == Decimal("0.798000")
+
 
 class TestRatesEndpoint:
     def test_default_base_is_usd(self) -> None:
