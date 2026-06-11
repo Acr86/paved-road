@@ -29,7 +29,7 @@ spec:
             service: fx-rates
           annotations:
             summary: fx-rates is burning its error budget 14x too fast
-            runbook_url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
 
         - alert: FxRatesSlowBurn
           # 6x burn: budget gone in ~5 days if sustained. Ticket, not page.
@@ -49,7 +49,7 @@ spec:
             service: fx-rates
           annotations:
             summary: fx-rates is burning its error budget 6x too fast
-            runbook_url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
 
         - alert: FxRatesP95LatencyHigh
           # The latency SLO is p95 < 300ms (docs/slo.md).
@@ -63,4 +63,4 @@ spec:
             service: fx-rates
           annotations:
             summary: fx-rates p95 latency exceeds the 300ms objective
-            runbook_url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-002-fast-burn-slo.md

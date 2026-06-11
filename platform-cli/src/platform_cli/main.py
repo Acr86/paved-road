@@ -1,4 +1,4 @@
-"""``platform`` — the andamio golden-path CLI."""
+"""``platform`` — the paved-road golden-path CLI."""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ def list_entries() -> None:
         _print_problems(exc.problems)
         raise typer.Exit(code=1) from exc
 
-    table = Table(title=f"andamio catalog ({len(entries)} entries)")
+    table = Table(title=f"paved-road catalog ({len(entries)} entries)")
     table.add_column("name", style="bold")
     table.add_column("kind")
     table.add_column("owner")

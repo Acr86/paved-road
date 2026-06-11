@@ -73,6 +73,6 @@ deny contains msg if {
 
 deny contains msg if {
 	some c in containers
-	not startswith(c.image, "ghcr.io/acr86/andamio/")
+	not startswith(c.image, "ghcr.io/acr86/paved-road/")
 	msg := sprintf("%s: container %q image %q is outside the platform registry", [subject, c.name, c.image])
 }

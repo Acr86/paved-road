@@ -24,12 +24,12 @@ spec:
           - pullRequest:
               github:
                 owner: Acr86
-                repo: andamio
+                repo: paved-road
                 labels:
                   - preview
               requeueAfterSeconds: 300
           - git:
-              repoURL: https://github.com/Acr86/andamio.git
+              repoURL: https://github.com/Acr86/paved-road.git
               revision: main
               directories:
                 - path: deploy/kustomize/services/*/overlays/preview
@@ -37,17 +37,17 @@ spec:
     metadata:
       name: 'pr-{{ .number }}-{{ index .path.segments 3 }}'
       labels:
-        app.kubernetes.io/part-of: andamio
-        andamio.dev/preview: "true"
+        app.kubernetes.io/part-of: paved-road
+        pavedroad.dev/preview: "true"
     spec:
       project: default
       source:
-        repoURL: https://github.com/Acr86/andamio.git
+        repoURL: https://github.com/Acr86/paved-road.git
         targetRevision: '{{ .head_sha }}'
         path: '{{ .path.path }}'
         kustomize:
           images:
-            - 'ghcr.io/acr86/andamio/{{ index .path.segments 3 }}=ghcr.io/acr86/andamio/{{ index .path.segments 3 }}:pr-{{ .number }}'
+            - 'ghcr.io/acr86/paved-road/{{ index .path.segments 3 }}=ghcr.io/acr86/paved-road/{{ index .path.segments 3 }}:pr-{{ .number }}'
           patches:
             - target:
                 kind: Ingress
@@ -67,8 +67,8 @@ spec:
           - CreateNamespace=true
         managedNamespaceMetadata:
           labels:
-            andamio.dev/preview: "true"
-            andamio.dev/pr: '{{ .number }}'
+            pavedroad.dev/preview: "true"
+            pavedroad.dev/pr: '{{ .number }}'
         retry:
           limit: 5
           backoff:

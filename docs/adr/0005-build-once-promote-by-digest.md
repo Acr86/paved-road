@@ -14,7 +14,7 @@ For a platform whose CI gates (tests, vulnerability scan, policy checks) are the
 
 ## Decision
 
-Images are built and validated exactly once, inside the PR. [reusable-service-ci.yml](../../.github/workflows/reusable-service-ci.yml) runs pytest, builds with buildx, gates on Trivy (fail on CRITICAL/HIGH), and pushes `ghcr.io/acr86/andamio/<service>:pr-<N>`.
+Images are built and validated exactly once, inside the PR. [reusable-service-ci.yml](../../.github/workflows/reusable-service-ci.yml) runs pytest, builds with buildx, gates on Trivy (fail on CRITICAL/HIGH), and pushes `ghcr.io/acr86/paved-road/<service>:pr-<N>`.
 
 On merge, [release.yml](../../.github/workflows/release.yml) promotes instead of rebuilding: it resolves the digest behind `:pr-<N>` with `crane digest` and re-tags that exact digest as `:main` and `:sha-<short>` — a registry metadata operation, no build. The promoted digest is then signed with cosign (keyless, GitHub OIDC; see ADR 0006) and a syft SBOM is attached as a release artifact. Rollback is the same primitive in reverse: re-point `:main` at a previous known-good digest with `crane tag`, as documented in runbook RB-003 — no pipeline rerun, no rebuild, seconds not minutes.
 

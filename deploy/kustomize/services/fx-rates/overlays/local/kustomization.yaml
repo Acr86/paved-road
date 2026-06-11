@@ -8,5 +8,5 @@ resources:
   - ../../base
   - ingress.yaml
 images:
-  - name: ghcr.io/acr86/andamio/fx-rates
+  - name: ghcr.io/acr86/paved-road/fx-rates
     newTag: main

@@ -12,7 +12,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Acr86/andamio.git
+    repoURL: https://github.com/Acr86/paved-road.git
     targetRevision: main
     path: deploy/argocd/apps
   destination:

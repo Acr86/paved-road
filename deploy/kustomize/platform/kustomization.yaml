@@ -6,6 +6,6 @@ resources:
   - preview-janitor-cronjob.yaml
 labels:
   - pairs:
-      app.kubernetes.io/part-of: andamio
+      app.kubernetes.io/part-of: paved-road
       app.kubernetes.io/managed-by: gitops
     includeSelectors: false

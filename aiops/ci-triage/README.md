@@ -6,7 +6,7 @@ failure category, a likely owner and a suggested first action.
 
 ```bash
 # against a failed run (gh CLI authenticated)
-uv run --project aiops/ci-triage ci-triage --repo acr86/andamio --run-id 123456789
+uv run --project aiops/ci-triage ci-triage --repo acr86/paved-road --run-id 123456789
 
 # against any log file
 uv run --project aiops/ci-triage ci-triage --log-file build.log --format json

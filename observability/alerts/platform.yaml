@@ -18,7 +18,7 @@ spec:
             severity: ticket
           annotations:
             summary: "ArgoCD application {{ $labels.name }} cannot reach Synced"
-            runbook_url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-003-rollback.md
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-003-rollback.md
 
         - alert: ArgoAppDegraded
           expr: sum by (name) (argocd_app_info{health_status="Degraded"}) > 0
@@ -27,7 +27,7 @@ spec:
             severity: page
           annotations:
             summary: "ArgoCD application {{ $labels.name }} is Degraded"
-            runbook_url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-003-rollback.md
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-003-rollback.md
 
     - name: platform.previews
       rules:
@@ -40,4 +40,4 @@ spec:
             severity: ticket
           annotations:
             summary: the preview-environment janitor is failing
-            runbook_url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-001-preview-not-collected.md
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-001-preview-not-collected.md

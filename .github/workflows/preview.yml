@@ -72,7 +72,7 @@ jobs:
             echo "| Service | Image | URL on a local cluster |"
             echo "|---|---|---|"
             for svc in $(echo "$SERVICES" | jq -r '.[]'); do
-              echo "| ${svc} | \`ghcr.io/acr86/andamio/${svc}:pr-${PR}\` | http://pr-${PR}.${svc}.127.0.0.1.nip.io:8080/ |"
+              echo "| ${svc} | \`ghcr.io/acr86/paved-road/${svc}:pr-${PR}\` | http://pr-${PR}.${svc}.127.0.0.1.nip.io:8080/ |"
             done
             echo
             echo "Closing this PR prunes the environment; the janitor reclaims the namespace."

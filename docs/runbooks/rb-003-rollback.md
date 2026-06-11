@@ -20,9 +20,9 @@ This runbook is short on purpose. Releases promote by digest — `release.yml` r
 
 2. Identify the previous good image digest and verify its provenance — every promoted digest is keyless-signed from GitHub Actions OIDC:
 
-       crane ls ghcr.io/acr86/andamio/fx-rates
-       cosign verify ghcr.io/acr86/andamio/fx-rates@sha256:<previous> \
-         --certificate-identity-regexp 'github.com/Acr86/andamio' \
+       crane ls ghcr.io/acr86/paved-road/fx-rates
+       cosign verify ghcr.io/acr86/paved-road/fx-rates@sha256:<previous> \
+         --certificate-identity-regexp 'github.com/Acr86/paved-road' \
          --certificate-oidc-issuer https://token.actions.githubusercontent.com
 
 ## Resolution
@@ -36,8 +36,8 @@ Caveat: the services ApplicationSet runs auto-sync with self-heal, so ArgoCD wil
 
 Path B — move the desired state (durable):
 
-    crane ls ghcr.io/acr86/andamio/fx-rates
-    crane tag ghcr.io/acr86/andamio/fx-rates@sha256:<previous> main
+    crane ls ghcr.io/acr86/paved-road/fx-rates
+    crane tag ghcr.io/acr86/paved-road/fx-rates@sha256:<previous> main
     kubectl -n services rollout restart deployment/fx-rates
 
 The retag moves what `main` means; the restart makes the pods pull it. ArgoCD self-heal keeps everything else converged.

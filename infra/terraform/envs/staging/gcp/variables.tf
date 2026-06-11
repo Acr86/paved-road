@@ -22,7 +22,7 @@ variable "region" {
 variable "github_repository" {
   type        = string
   description = "GitHub repository (owner/name) whose workflows are allowed to deploy this environment via workload identity federation."
-  default     = "Acr86/andamio"
+  default     = "Acr86/paved-road"
 
   validation {
     condition     = can(regex("^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/[A-Za-z0-9._-]+$", var.github_repository))

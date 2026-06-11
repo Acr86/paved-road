@@ -1,6 +1,6 @@
 # The preview-environment janitor. Runs the same `platform` CLI (same image,
 # same unit-tested decision rules) a developer runs locally:
-#   - TTL rule: namespaces whose andamio.dev/expires-at deadline passed
+#   - TTL rule: namespaces whose pavedroad.dev/expires-at deadline passed
 #   - orphan rule: preview namespaces whose Application no longer exists
 #     (PR closed), after a grace period
 # This is the cost story for ephemeral environments: nothing survives its
@@ -31,7 +31,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: janitor
-              image: ghcr.io/acr86/andamio/platform-cli:main
+              image: ghcr.io/acr86/paved-road/platform-cli:main
               args: ["preview", "gc", "--orphans"]
               securityContext:
                 allowPrivilegeEscalation: false

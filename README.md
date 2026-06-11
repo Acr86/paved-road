@@ -1,17 +1,17 @@
-# andamio
+# paved-road
 
 A reference internal developer platform that runs on your laptop in one
 command — golden-path scaffolding, digest-promotion CI/CD, ephemeral preview
 environments, SLO-driven alerting, and policy-checked Terraform for AWS and
 GCP.
 
-[![ci](https://github.com/Acr86/andamio/actions/workflows/ci.yml/badge.svg)](https://github.com/Acr86/andamio/actions/workflows/ci.yml)
-[![terraform](https://github.com/Acr86/andamio/actions/workflows/terraform.yml/badge.svg)](https://github.com/Acr86/andamio/actions/workflows/terraform.yml)
+[![ci](https://github.com/Acr86/paved-road/actions/workflows/ci.yml/badge.svg)](https://github.com/Acr86/paved-road/actions/workflows/ci.yml)
+[![terraform](https://github.com/Acr86/paved-road/actions/workflows/terraform.yml/badge.svg)](https://github.com/Acr86/paved-road/actions/workflows/terraform.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## What is this
 
-Andamio (Spanish for *scaffolding*) is a working reference implementation of
+Paved Road (Spanish for *scaffolding*) is a working reference implementation of
 an internal developer platform: the paved road a product team would use to go
 from "I need a new service" to "it is deployed, observed, and safe to
 change". The core runs entirely on a laptop — service catalog, scaffolder,
@@ -64,7 +64,7 @@ Prerequisites: Docker (8 GB allocated), [k3d](https://k3d.io),
 kubectl, [uv](https://docs.astral.sh/uv/), make.
 
 ```bash
-git clone https://github.com/Acr86/andamio && cd andamio
+git clone https://github.com/Acr86/paved-road && cd paved-road
 make doctor        # verify the tools above
 make up            # k3d cluster + Argo CD + the root app (~5-8 min first run)
 make demo          # scaffold a service and walk it onto the platform
@@ -186,7 +186,7 @@ not gaps discovered later.
 
 ## About this project
 
-Andamio distills several years of designing and operating the delivery
+Paved Road distills several years of designing and operating the delivery
 platform for a regulated fintech, where I built the paved road end to end:
 pipeline quality gates, build-once/promote-by-digest releases, keyless OIDC
 authentication to cloud providers, a Terraform module library with drift

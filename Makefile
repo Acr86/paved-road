@@ -1,11 +1,11 @@
-# andamio — single entrypoint. Every capability the README claims maps to a
+# paved-road — single entrypoint. Every capability the README claims maps to a
 # target here; if it is not runnable from this file, the README must call it
 # a blueprint.
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 .DEFAULT_GOAL := help
 
-CLUSTER := andamio
+CLUSTER := paved-road
 CLI := uv run --project platform-cli platform
 
 .PHONY: help doctor up down clean demo demo-clean preview test lint tf-validate \

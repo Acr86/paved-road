@@ -1,7 +1,7 @@
 {
   "uid": "service-golden-signals",
   "title": "Service Golden Signals",
-  "tags": ["andamio", "service"],
+  "tags": ["paved-road", "service"],
   "schemaVersion": 39,
   "version": 1,
   "refresh": "30s",

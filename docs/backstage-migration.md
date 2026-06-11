@@ -24,9 +24,9 @@ runs after it so Backstage never ingests an entry that failed the gate.
 | `kind: system` | `kind: System` |
 | `owner` | `spec.owner: group:<owner>` |
 | `lifecycle` | `spec.lifecycle` |
-| `tier` | `metadata.labels["andamio.dev/tier"]` |
+| `tier` | `metadata.labels["pavedroad.dev/tier"]` |
 | `language` | `metadata.tags` |
-| `template` | `metadata.annotations["andamio.dev/scaffolded-from"]` |
+| `template` | `metadata.annotations["pavedroad.dev/scaffolded-from"]` |
 | `links.runbook` / `links.dashboard` / `links.source` | `metadata.links` (with `docs`/`dashboard`/`code` icons); `source` additionally as `backstage.io/source-location` |
 
 Our link values are repo-relative paths checked against the working tree by `validate`; the
@@ -56,20 +56,20 @@ metadata:
   name: fx-rates
   description: "Reference FX quotes service: serves indicative exchange rates with golden-signal metrics."
   labels:
-    andamio.dev/tier: t2
+    pavedroad.dev/tier: t2
   tags:
     - python
   annotations:
-    andamio.dev/scaffolded-from: fastapi-service
-    backstage.io/source-location: url:https://github.com/Acr86/andamio/tree/main/services/fx-rates
+    pavedroad.dev/scaffolded-from: fastapi-service
+    backstage.io/source-location: url:https://github.com/Acr86/paved-road/tree/main/services/fx-rates
   links:
-    - url: https://github.com/Acr86/andamio/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
+    - url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-002-fast-burn-slo.md
       title: Runbook
       icon: docs
     - url: http://grafana.127.0.0.1.nip.io:8080/d/service-golden-signals
       title: Dashboard
       icon: dashboard
-    - url: https://github.com/Acr86/andamio/tree/main/services/fx-rates
+    - url: https://github.com/Acr86/paved-road/tree/main/services/fx-rates
       title: Source
       icon: code
 spec:

@@ -19,7 +19,7 @@ PAGE_TEMPLATE = """\
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>andamio — service catalog</title>
+<title>paved-road — service catalog</title>
 <style>
   body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 60rem; color: #1a1a1a; }
   h1 { font-weight: 600; }
@@ -35,7 +35,7 @@ PAGE_TEMPLATE = """\
 </style>
 </head>
 <body>
-<h1>andamio &mdash; service catalog</h1>
+<h1>paved-road &mdash; service catalog</h1>
 <p class="sub">{{ entries | length }} entries. Generated from <code>catalog/*.yaml</code>
 by <code>platform catalog render</code>.</p>
 <table>

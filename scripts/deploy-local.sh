@@ -12,7 +12,7 @@ source "${ROOT}/infra/local/versions.env"
 SERVICE="${1:?usage: deploy-local.sh <service-name>}"
 SERVICE_DIR="${ROOT}/services/${SERVICE}"
 OVERLAY="${ROOT}/deploy/kustomize/services/${SERVICE}/overlays/local"
-IMAGE="ghcr.io/acr86/andamio/${SERVICE}:main"
+IMAGE="ghcr.io/acr86/paved-road/${SERVICE}:main"
 
 [ -d "${SERVICE_DIR}" ] || { echo "error: services/${SERVICE} does not exist" >&2; exit 1; }
 [ -d "${OVERLAY}" ] || { echo "error: ${OVERLAY} does not exist" >&2; exit 1; }

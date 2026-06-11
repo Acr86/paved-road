@@ -1,7 +1,7 @@
 {
   "uid": "platform-overview",
   "title": "Platform Overview",
-  "tags": ["andamio", "platform"],
+  "tags": ["paved-road", "platform"],
   "schemaVersion": 39,
   "version": 1,
   "refresh": "30s",
@@ -37,10 +37,10 @@
       "id": 3,
       "type": "stat",
       "title": "Preview environments alive",
-      "description": "Namespaces labelled andamio.dev/preview=true. The janitor keeps this from growing unbounded.",
+      "description": "Namespaces labelled pavedroad.dev/preview=true. The janitor keeps this from growing unbounded.",
       "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
       "targets": [
-        { "expr": "count(kube_namespace_labels{label_andamio_dev_preview=\"true\"}) or vector(0)", "legendFormat": "previews", "refId": "A" }
+        { "expr": "count(kube_namespace_labels{label_paved-road_dev_preview=\"true\"}) or vector(0)", "legendFormat": "previews", "refId": "A" }
       ],
       "fieldConfig": { "defaults": {}, "overrides": [] }
     },

@@ -195,7 +195,7 @@ jobs:
       - name: Janitor safety smoke (refuses to reap fresh namespaces)
         run: |
           kubectl create namespace pr-9999
-          kubectl label namespace pr-9999 andamio.dev/preview=true
+          kubectl label namespace pr-9999 pavedroad.dev/preview=true
           uv_bin=$(command -v uv || true)
           if [ -z "$uv_bin" ]; then curl -LsSf https://astral.sh/uv/install.sh | sh; export PATH="$HOME/.local/bin:$PATH"; fi
           uv run --project platform-cli platform preview gc --orphans --dry-run

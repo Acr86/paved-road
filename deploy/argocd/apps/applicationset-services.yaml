@@ -12,7 +12,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: https://github.com/Acr86/andamio.git
+        repoURL: https://github.com/Acr86/paved-road.git
         revision: main
         directories:
           - path: deploy/kustomize/services/*/overlays/local
@@ -20,11 +20,11 @@ spec:
     metadata:
       name: 'svc-{{ index .path.segments 3 }}'
       labels:
-        app.kubernetes.io/part-of: andamio
+        app.kubernetes.io/part-of: paved-road
     spec:
       project: default
       source:
-        repoURL: https://github.com/Acr86/andamio.git
+        repoURL: https://github.com/Acr86/paved-road.git
         targetRevision: main
         path: '{{ .path.path }}'
       destination:

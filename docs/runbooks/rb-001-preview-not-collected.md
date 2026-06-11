@@ -27,16 +27,16 @@
        kubectl -n platform-system get jobs --sort-by=.metadata.creationTimestamp
        kubectl -n platform-system logs job/<most-recent-job>
 
-4. Look for the warning `has a missing or malformed andamio.dev/expires-at label — refusing to touch it`. This is a safety, not a bug: the janitor never deletes a namespace whose deadline it cannot parse. If your surviving namespace is in that list, the label is the problem, not the janitor.
+4. Look for the warning `has a missing or malformed pavedroad.dev/expires-at label — refusing to touch it`. This is a safety, not a bug: the janitor never deletes a namespace whose deadline it cannot parse. If your surviving namespace is in that list, the label is the problem, not the janitor.
 5. Verify the orphan rule's precondition — the ArgoCD Application must be gone:
 
        kubectl get applications -n argocd | grep pr-
 
    Previews are named `pr-<N>-<service>`. If the Application still exists, the PR generator still sees the PR as open and labelled `preview`; the janitor is correct to keep the namespace.
-6. If janitor pods never start, check whether `ghcr.io/acr86/andamio/platform-cli:main` is pullable:
+6. If janitor pods never start, check whether `ghcr.io/acr86/paved-road/platform-cli:main` is pullable:
 
        kubectl -n platform-system get pods
-       docker pull ghcr.io/acr86/andamio/platform-cli:main
+       docker pull ghcr.io/acr86/paved-road/platform-cli:main
 
    `ImagePullBackOff` on the janitor pod points at the image, not the rules.
 
@@ -53,7 +53,7 @@
 
 - For a malformed deadline you want the janitor to handle instead, repair the label and let the next run collect it:
 
-      kubectl label namespace pr-<N> andamio.dev/expires-at=<unix-epoch> --overwrite
+      kubectl label namespace pr-<N> pavedroad.dev/expires-at=<unix-epoch> --overwrite
 
 - If the image was the cause, fix the publish path (release.yml pushes `platform-cli:main`) and let the next scheduled run proceed.
 
@@ -65,4 +65,4 @@
 
 ## Automation status
 
-TTL expiry and orphan reaping are fully automated: the CronJob runs the same unit-tested `platform preview gc --orphans` code path every 15 minutes. The residual human work is namespaces with malformed `andamio.dev/expires-at` labels — the janitor reports them and deliberately refuses to delete them, so a person must repair the label or delete the namespace.
+TTL expiry and orphan reaping are fully automated: the CronJob runs the same unit-tested `platform preview gc --orphans` code path every 15 minutes. The residual human work is namespaces with malformed `pavedroad.dev/expires-at` labels — the janitor reports them and deliberately refuses to delete them, so a person must repair the label or delete the namespace.

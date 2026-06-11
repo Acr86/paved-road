@@ -1,9 +1,9 @@
 """Preview environment lifecycle.
 
 Preview environments are namespaces named ``pr-<number>`` labelled
-``andamio.dev/preview=true``. Two independent rules reclaim them:
+``pavedroad.dev/preview=true``. Two independent rules reclaim them:
 
-- **TTL**: an ``andamio.dev/expires-at=<unix epoch>`` label in the past.
+- **TTL**: an ``pavedroad.dev/expires-at=<unix epoch>`` label in the past.
   Set by ``platform preview create``; an absolute deadline, never sliding.
 - **Orphan**: the ApplicationSet pruned the PR's Application (the PR was
   closed or unlabelled) but the namespace it deployed into remains — ArgoCD
@@ -23,8 +23,8 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 
-PREVIEW_LABEL = "andamio.dev/preview"
-EXPIRES_LABEL = "andamio.dev/expires-at"
+PREVIEW_LABEL = "pavedroad.dev/preview"
+EXPIRES_LABEL = "pavedroad.dev/expires-at"
 ORPHAN_GRACE_SECONDS = 1800
 
 

@@ -1,7 +1,7 @@
 [project]
-name = "andamio-platform-cli"
+name = "paved-road-platform-cli"
 version = "0.1.0"
-description = "Golden-path CLI for the andamio reference platform: scaffold services, validate the catalog, manage preview environments."
+description = "Golden-path CLI for the paved-road reference platform: scaffold services, validate the catalog, manage preview environments."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"

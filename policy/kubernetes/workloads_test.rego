@@ -9,7 +9,7 @@ compliant_deployment := {
 		"securityContext": {"runAsNonRoot": true},
 		"containers": [{
 			"name": "app",
-			"image": "ghcr.io/acr86/andamio/fx-rates:main",
+			"image": "ghcr.io/acr86/paved-road/fx-rates:main",
 			"resources": {
 				"requests": {"cpu": "25m", "memory": "64Mi"},
 				"limits": {"cpu": "250m", "memory": "256Mi"},
@@ -50,7 +50,7 @@ test_latest_tag_is_denied if {
 	bad := json.patch(compliant_deployment, [{
 		"op": "replace",
 		"path": "/spec/template/spec/containers/0/image",
-		"value": "ghcr.io/acr86/andamio/fx-rates:latest",
+		"value": "ghcr.io/acr86/paved-road/fx-rates:latest",
 	}])
 	some msg in deny with input as bad
 	contains(msg, ":latest")
@@ -83,7 +83,7 @@ test_cronjob_pod_spec_is_inspected if {
 			"securityContext": {"runAsNonRoot": true},
 			"containers": [{
 				"name": "janitor",
-				"image": "ghcr.io/acr86/andamio/platform-cli:main",
+				"image": "ghcr.io/acr86/paved-road/platform-cli:main",
 				"resources": {"requests": {"cpu": "10m"}},
 				"securityContext": {
 					"allowPrivilegeEscalation": false,

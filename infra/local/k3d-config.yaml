@@ -4,7 +4,7 @@
 apiVersion: k3d.io/v1alpha5
 kind: Simple
 metadata:
-  name: andamio
+  name: paved-road
 servers: 1
 agents: 0
 image: rancher/k3s:v1.33.4-k3s1

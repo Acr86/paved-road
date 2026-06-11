@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.12"
 
 [[package]]
-name = "andamio-platform-cli"
+name = "paved-road-platform-cli"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

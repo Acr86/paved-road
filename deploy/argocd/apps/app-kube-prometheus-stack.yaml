@@ -43,7 +43,7 @@ spec:
           # Preview-namespace labels feed the platform-overview dashboard
           # and the janitor alerts.
           metricLabelsAllowlist:
-            - namespaces=[andamio.dev/preview,andamio.dev/pr]
+            - namespaces=[pavedroad.dev/preview,pavedroad.dev/pr]
         grafana:
           defaultDashboardsEnabled: false
           ingress:

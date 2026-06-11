@@ -38,7 +38,7 @@ jobs:
     outputs:
       digest: ${{ steps.push.outputs.digest }}
     env:
-      IMAGE: ghcr.io/acr86/andamio/${{ inputs.service }}
+      IMAGE: ghcr.io/acr86/paved-road/${{ inputs.service }}
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 

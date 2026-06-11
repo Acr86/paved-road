@@ -17,7 +17,7 @@ and how to verify it. Status is precise:
 | Golden-path scaffolding (one pass: service + manifests + catalog entry) | [templates/fastapi-service/](../templates/fastapi-service/), [ADR-0007](adr/0007-copier-golden-paths.md) | runnable | `make demo` |
 | GitOps delivery (apps appear by existing) | [deploy/argocd/](../deploy/argocd/), [ADR-0004](adr/0004-gitops-argocd-app-of-apps.md) | runnable | `make up && kubectl get applications -n argocd` |
 | Change-scoped CI (only what the diff touches runs) | [.github/workflows/ci.yml](../.github/workflows/ci.yml) | runnable | open any PR; check the `changes` job routing |
-| Build once, promote by digest (+ keyless signing, SBOM) | [.github/workflows/release.yml](../.github/workflows/release.yml), [ADR-0005](adr/0005-build-once-promote-by-digest.md) | runnable | `cosign verify ghcr.io/acr86/andamio/fx-rates:main ...` |
+| Build once, promote by digest (+ keyless signing, SBOM) | [.github/workflows/release.yml](../.github/workflows/release.yml), [ADR-0005](adr/0005-build-once-promote-by-digest.md) | runnable | `cosign verify ghcr.io/acr86/paved-road/fx-rates:main ...` |
 | Ephemeral preview environments per PR, TTL + orphan GC | [deploy/argocd/apps/applicationset-previews.yaml](../deploy/argocd/apps/applicationset-previews.yaml), [ADR-0009](adr/0009-previews-applicationset-ttl-janitor.md) | runnable | label a PR `preview`; offline: `make preview PR=123` |
 | Policy-as-code on every rendered manifest (policies unit-tested) | [policy/kubernetes/](../policy/kubernetes/) | runnable | `conftest verify --policy policy/kubernetes` |
 | Vulnerability gates on every image | [reusable-service-ci.yml](../.github/workflows/reusable-service-ci.yml) | runnable | any PR touching a service |
@@ -34,4 +34,4 @@ and how to verify it. Status is precise:
 
 Anything this repository claims, one of these commands or files verifies.
 If a claim cannot be verified here, treat it as a bug in the documentation
-and [open an issue](https://github.com/Acr86/andamio/issues).
+and [open an issue](https://github.com/Acr86/paved-road/issues).
