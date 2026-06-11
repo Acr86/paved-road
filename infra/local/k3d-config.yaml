@@ -1,0 +1,20 @@
+# k3d cluster definition for the local platform.
+# The same file is used by `make up` on a laptop and by the e2e job in CI,
+# so "works locally" and "works in CI" are the same claim.
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: andamio
+servers: 1
+agents: 0
+image: rancher/k3s:v1.33.4-k3s1
+ports:
+  # Traefik (bundled with k3s) listens on 80 inside the cluster;
+  # everything is reachable at *.127.0.0.1.nip.io:8080 without /etc/hosts edits.
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: "120s"
