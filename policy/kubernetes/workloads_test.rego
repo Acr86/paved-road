@@ -96,3 +96,49 @@ test_cronjob_pod_spec_is_inspected if {
 	some msg in deny with input as cronjob
 	contains(msg, "resources.limits")
 }
+
+compliant_inference := json.patch(compliant_deployment, [
+	{"op": "replace", "path": "/metadata/name", "value": "similarity-search"},
+	{"op": "add", "path": "/spec/template/metadata", "value": {
+		"labels": {"pavedroad.dev/workload": "inference"},
+		"annotations": {"pavedroad.dev/model": "hashing@v1"},
+	}},
+	{"op": "add", "path": "/spec/template/spec/containers/0/startupProbe", "value": {"httpGet": {"path": "/readyz", "port": "http"}}},
+	{"op": "add", "path": "/spec/template/spec/containers/0/readinessProbe", "value": {"httpGet": {"path": "/readyz", "port": "http"}}},
+])
+
+test_compliant_inference_workload_passes if {
+	count(deny) == 0 with input as compliant_inference
+}
+
+test_inference_rules_do_not_apply_to_plain_services if {
+	# compliant_deployment has no startupProbe and no model annotation — and must still pass.
+	count(deny) == 0 with input as compliant_deployment
+}
+
+test_inference_without_startup_probe_is_denied if {
+	bad := json.patch(compliant_inference, [{
+		"op": "remove",
+		"path": "/spec/template/spec/containers/0/startupProbe",
+	}])
+	some msg in deny with input as bad
+	contains(msg, "startupProbe")
+}
+
+test_inference_without_readiness_probe_is_denied if {
+	bad := json.patch(compliant_inference, [{
+		"op": "remove",
+		"path": "/spec/template/spec/containers/0/readinessProbe",
+	}])
+	some msg in deny with input as bad
+	contains(msg, "readinessProbe")
+}
+
+test_inference_without_model_provenance_is_denied if {
+	bad := json.patch(compliant_inference, [{
+		"op": "remove",
+		"path": "/spec/template/metadata/annotations",
+	}])
+	some msg in deny with input as bad
+	contains(msg, "pavedroad.dev/model")
+}

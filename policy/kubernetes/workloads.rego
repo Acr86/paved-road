@@ -76,3 +76,34 @@ deny contains msg if {
 	not startswith(c.image, "ghcr.io/acr86/paved-road/")
 	msg := sprintf("%s: container %q image %q is outside the platform registry", [subject, c.name, c.image])
 }
+
+# --- inference workloads ------------------------------------------------------
+# Workloads labelled pavedroad.dev/workload=inference (the inference-service
+# golden path) carry extra obligations, because model serving fails in ways
+# plain HTTP services do not: a slow model load killed by liveness restarts
+# forever, a pod that is "up" but has no model serves errors, and an answer
+# nobody can attribute to a model version cannot be debugged.
+
+pod_template_metadata := input.spec.template.metadata if input.kind in workload_kinds
+
+is_inference if pod_template_metadata.labels["pavedroad.dev/workload"] == "inference"
+
+deny contains msg if {
+	is_inference
+	some c in containers
+	not c.startupProbe
+	msg := sprintf("%s: inference container %q must declare a startupProbe — model loads must not race liveness", [subject, c.name])
+}
+
+deny contains msg if {
+	is_inference
+	some c in containers
+	not c.readinessProbe
+	msg := sprintf("%s: inference container %q must declare a readinessProbe gated on the model being loaded", [subject, c.name])
+}
+
+deny contains msg if {
+	is_inference
+	not pod_template_metadata.annotations["pavedroad.dev/model"]
+	msg := sprintf("%s: inference pods must carry the pavedroad.dev/model annotation (name@version) for provenance", [subject])
+}

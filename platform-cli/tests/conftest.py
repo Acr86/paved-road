@@ -20,9 +20,9 @@ def tmp_repo(tmp_path: Path) -> Path:
     (tmp_path / "services").mkdir()
     (tmp_path / "deploy" / "kustomize" / "services").mkdir(parents=True)
 
-    template_src = REPO_ROOT / "templates" / "fastapi-service"
-    if template_src.is_dir():
-        shutil.copytree(template_src, tmp_path / "templates" / "fastapi-service")
+    templates_src = REPO_ROOT / "templates"
+    if templates_src.is_dir():
+        shutil.copytree(templates_src, tmp_path / "templates")
 
     def git(*args: str) -> None:
         subprocess.run(

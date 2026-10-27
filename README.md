@@ -101,6 +101,7 @@ Anything this repository claims, you can verify with a command listed in
 | Observability | Dashboards as code, multi-window burn-rate SLO alerts, every alert links its runbook | runnable |
 | Infrastructure | Mirrored AWS/GCP Terraform module contracts, keyless OIDC identity, WORM audit archives | blueprint |
 | Operational intelligence | Rules-first CI failure triage with optional LLM summaries | runnable |
+| AI workloads | Inference golden path: model lifecycle behind a startupProbe, bounded requests, model provenance, shared inference alerts and policies | runnable (GPU overlay: blueprint) |
 
 The full map with verification commands: [docs/capabilities.md](docs/capabilities.md).
 
@@ -144,7 +145,9 @@ re-pointing a tag at the previous signed digest
 |---|---|
 | [platform-cli/](platform-cli/) | The `platform` CLI: scaffold, validate, previews. Also the janitor's container image |
 | [templates/fastapi-service/](templates/fastapi-service/) | The golden-path template (Copier): one render produces service, manifests and catalog entry |
+| [templates/inference-service/](templates/inference-service/) | The inference golden path: embeddings + vector search with the model-serving contract ([ADR-0014](docs/adr/0014-inference-golden-path.md)) |
 | [services/fx-rates/](services/fx-rates/) | Reference service, generated from the template — provenance in `.copier-answers.yml` |
+| [services/similarity-search/](services/similarity-search/) | Reference inference service, generated from the inference template |
 | [catalog/](catalog/) | The service catalog; `platform validate` keeps it honest in CI |
 | [deploy/argocd/](deploy/argocd/) | App-of-apps: service generator, preview PR generator, platform system |
 | [observability/](observability/) | Dashboards and alert rules as code |
@@ -155,7 +158,7 @@ re-pointing a tag at the previous signed digest
 
 ## Design decisions
 
-Thirteen ADRs record the load-bearing choices — each names a real rejected
+Fourteen ADRs record the load-bearing choices — each names a real rejected
 alternative and at least one consequence that hurts. Start with:
 
 - [0002 — Runnable core, validated blueprint](docs/adr/0002-runnable-core-validated-blueprint.md)
@@ -163,6 +166,7 @@ alternative and at least one consequence that hurts. Start with:
 - [0009 — Previews: ApplicationSet + TTL janitor](docs/adr/0009-previews-applicationset-ttl-janitor.md)
 - [0011 — Provider-neutral contracts, AWS and GCP](docs/adr/0011-provider-neutral-contracts-aws-gcp.md)
 - [0012 — Evidence is generated, not maintained](docs/adr/0012-evidence-generated-not-maintained.md)
+- [0014 — A golden path for model-inference services](docs/adr/0014-inference-golden-path.md)
 
 Full index in [docs/adr/](docs/adr/).
 

@@ -1,0 +1,10 @@
+name: {{ service_name }}
+kind: service
+owner: {{ owner }}
+description: {{ description | tojson }}
+tier: {{ tier }}
+lifecycle: experimental
+language: python
+template: inference-service
+links:
+  source: services/{{ service_name }}

@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ service_name }}
+spec:
+  ingressClassName: traefik
+  rules:
+    # The ApplicationSet patches this host to pr-<number>.{{ service_name }}.127.0.0.1.nip.io
+    - host: preview.{{ service_name }}.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ service_name }}
+                port:
+                  name: http

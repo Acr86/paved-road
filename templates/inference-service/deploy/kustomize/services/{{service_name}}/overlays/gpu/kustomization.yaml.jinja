@@ -1,0 +1,46 @@
+# GPU overlay — BLUEPRINT (ADR-0002): CI renders it, schema-checks it and
+# runs the platform policies over it, but no ApplicationSet deploys it; the
+# local k3d node has no GPU. It records what moving this service onto an
+# accelerator node pool takes on a real cluster (GKE / EKS / AKS with the
+# NVIDIA device plugin installed):
+#
+#   - request one GPU (extended resources are requested via limits only)
+#   - schedule onto the GPU pool and tolerate its taint, so CPU workloads
+#     never land on — and pay for — accelerator nodes
+#   - give the model room: weights + CUDA context dwarf the CPU defaults
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: services
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/acr86/paved-road/{{ service_name }}
+    newTag: main
+patches:
+  - target:
+      kind: Deployment
+      name: {{ service_name }}
+    patch: |-
+      - op: add
+        path: /spec/template/spec/nodeSelector
+        value:
+          pavedroad.dev/accelerator: nvidia
+      - op: add
+        path: /spec/template/spec/tolerations
+        value:
+          - key: nvidia.com/gpu
+            operator: Exists
+            effect: NoSchedule
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: "2"
+            memory: 8Gi
+          limits:
+            cpu: "4"
+            memory: 16Gi
+            nvidia.com/gpu: "1"
+      - op: replace
+        path: /spec/template/spec/volumes/0/emptyDir/sizeLimit
+        value: 20Gi
