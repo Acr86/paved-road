@@ -1,0 +1,12 @@
+# Template provenance — managed by Copier, do not edit by hand.
+# `copier update` uses this file to propagate template evolution to this service.
+_src_path: templates/inference-service
+description: 'Reference inference service: text embeddings and vector search behind
+    the inference golden-path contract.'
+embedding_dim: 384
+max_batch: 64
+model_backend: hashing
+owner: team-platform
+port: 8000
+service_name: similarity-search
+tier: t3

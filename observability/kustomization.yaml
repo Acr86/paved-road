@@ -7,6 +7,7 @@ namespace: observability
 resources:
   - alerts/slo-burn-rate.yaml
   - alerts/platform.yaml
+  - alerts/inference.yaml
 configMapGenerator:
   - name: dashboard-platform-overview
     files:

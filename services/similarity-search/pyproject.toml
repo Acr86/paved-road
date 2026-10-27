@@ -1,0 +1,29 @@
+[project]
+name = "similarity-search"
+version = "0.1.0"
+description = "Reference inference service: text embeddings and vector search behind the inference golden-path contract."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "prometheus-fastapi-instrumentator>=7.0",
+    "prometheus-client>=0.21",
+    "numpy>=2.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "httpx>=0.27",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

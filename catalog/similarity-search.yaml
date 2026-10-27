@@ -1,0 +1,10 @@
+name: similarity-search
+kind: service
+owner: team-platform
+description: "Reference inference service: text embeddings and vector search behind the inference golden-path contract."
+tier: t3
+lifecycle: experimental
+language: python
+template: inference-service
+links:
+  source: services/similarity-search

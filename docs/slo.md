@@ -30,6 +30,18 @@ Each alert ANDs a short and a long window, and both must agree. The short window
 
 The same file carries `FxRatesP95LatencyHigh` (p95 > 300ms for 10m, ticket) — a plain threshold rather than a burn rate, because a quantile is not a ratio you can budget cleanly. Every alert links its runbook via `runbook_url`, here [rb-002-fast-burn-slo.md](runbooks/rb-002-fast-burn-slo.md). The reasoning for two alerts instead of a full multiwindow ladder is recorded in ADR-0010.
 
+## Inference services
+
+Every service on the `inference-service` golden path ([ADR-0014](adr/0014-inference-golden-path.md)) shares one set of objectives, written once in [inference.yaml](../observability/alerts/inference.yaml) and grouped `by (service)` — a new inference service is covered the moment it is scraped.
+
+| SLI | Definition | Objective | Alert |
+| --- | --- | --- | --- |
+| Model availability | `max by (service) (inference_model_loaded)` — at least one replica has a model in memory | always 1 | `InferenceNoModelLoaded`, 0 for 5m, `page` |
+| Model latency | p95 of `inference_duration_seconds` — time inside the model or index, HTTP overhead excluded | p95 < 500ms | `InferenceP95LatencyHigh`, 10m, `ticket` |
+| Batch headroom | p95 of `inference_batch_size` against the service's own `inference_max_batch` | below the ceiling | `InferenceBatchesAtLimit`, 1h, `ticket` |
+
+Model time is measured separately from HTTP latency on purpose: when a response gets slower, the first question is whether the model or the web stack is responsible, and these two histograms answer it without a profiler. All three alerts route to [RB-004](runbooks/rb-004-inference.md).
+
 ## Platform SLOs
 
 The platform is a product too, so it gets objectives — measured honestly rather than precisely.

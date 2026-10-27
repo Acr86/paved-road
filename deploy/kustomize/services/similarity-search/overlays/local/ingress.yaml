@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: similarity-search
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: similarity-search.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: similarity-search
+                port:
+                  name: http

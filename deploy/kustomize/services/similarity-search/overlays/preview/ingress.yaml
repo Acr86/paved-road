@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: similarity-search
+spec:
+  ingressClassName: traefik
+  rules:
+    # The ApplicationSet patches this host to pr-<number>.similarity-search.127.0.0.1.nip.io
+    - host: preview.similarity-search.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: similarity-search
+                port:
+                  name: http

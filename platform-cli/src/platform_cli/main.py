@@ -49,7 +49,12 @@ def main_callback(
 @new_app.command("service")
 def new_service(
     name: str = typer.Argument(..., help="Service name (kebab-case)."),
-    template: str = typer.Option("fastapi-service", "--template", "-t"),
+    template: str = typer.Option(
+        "fastapi-service",
+        "--template",
+        "-t",
+        help="Golden-path template under templates/ (fastapi-service, inference-service).",
+    ),
     owner: str = typer.Option(..., "--owner", "-o", help="Owning team."),
     tier: str = typer.Option("t3", "--tier", help="Criticality tier: t1, t2 or t3."),
     description: str = typer.Option(
