@@ -1,0 +1,58 @@
+# Inference alerting, written once for every service on the inference-service
+# golden path. Rules select on the inference metrics contract (see the
+# template's src/app/metrics.py) and group `by (service)` — so a newly
+# scaffolded inference service is covered the moment Prometheus scrapes it,
+# with no per-service rule to write. The `service` label comes from the
+# app.kubernetes.io/name pod label (annotated-pods scrape job).
+#
+# Objectives (docs/slo.md): model time p95 < 500ms; a model loaded at all times.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: inference
+spec:
+  groups:
+    - name: inference.serving
+      rules:
+        - alert: InferenceNoModelLoaded
+          # Every scraped replica of the service reports 0: nothing can serve.
+          # `max` rather than `min` on purpose — one healthy replica is enough
+          # to keep serving; this fires only when none is.
+          expr: max by (service) (inference_model_loaded) == 0
+          for: 5m
+          labels:
+            severity: page
+          annotations:
+            summary: "{{ $labels.service }} has no replica with a model loaded"
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-004-inference.md
+
+        - alert: InferenceP95LatencyHigh
+          # Model time only (excludes HTTP overhead), so this separates "the
+          # model got slower" from "the web stack got slower".
+          expr: |
+            histogram_quantile(0.95,
+              sum by (service, le) (rate(inference_duration_seconds_bucket[5m]))
+            ) > 0.5
+          for: 10m
+          labels:
+            severity: ticket
+          annotations:
+            summary: "{{ $labels.service }} p95 model time exceeds the 500ms objective"
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-004-inference.md
+
+        - alert: InferenceBatchesAtLimit
+          # p95 batch size pinned at the ceiling means clients are being
+          # truncated or forced into extra round trips — a capacity signal,
+          # not an outage, so it opens a ticket.
+          # Compared against each service's own ceiling (inference_max_batch),
+          # not a hardcoded number, so services that tune MAX_BATCH stay correct.
+          expr: |
+            histogram_quantile(0.95,
+              sum by (service, le) (rate(inference_batch_size_bucket[30m]))
+            ) >= on (service) max by (service) (inference_max_batch)
+          for: 1h
+          labels:
+            severity: ticket
+          annotations:
+            summary: "{{ $labels.service }} requests sit at the batch-size ceiling"
+            runbook_url: https://github.com/Acr86/paved-road/blob/main/docs/runbooks/rb-004-inference.md

@@ -1,0 +1,65 @@
+# Golden-path template: model-inference service (embeddings + vector search).
+#
+# Same contract as fastapi-service — one render produces, relative to the
+# repository root:
+#   services/<name>/                      service source, tests, Dockerfile
+#   deploy/kustomize/services/<name>/     base + overlays (local, preview, gpu)
+#   catalog/<name>.yaml                   the catalog entry
+#
+# What this path adds over fastapi-service is the inference contract: a
+# model loaded once at startup behind a startupProbe, readiness gated on the
+# model being in memory, bounded request sizes, and the inference metrics
+# the platform alerts on (docs/adr/0014-inference-golden-path.md).
+
+_answers_file: "services/{{ service_name }}/.copier-answers.yml"
+_min_copier_version: "9.4.0"
+
+service_name:
+  type: str
+  help: Service name (kebab-case, e.g. similarity-search)
+  validator: >-
+    {% if not (service_name | regex_search('^[a-z][a-z0-9-]{1,40}[a-z0-9]$')) %}
+    service_name must be kebab-case: lowercase letters, digits and hyphens
+    {% endif %}
+
+owner:
+  type: str
+  help: Owning team (appears in the catalog and on-call routing)
+
+tier:
+  type: str
+  help: Criticality tier. t1/t2 require a linked runbook before `platform validate` passes.
+  default: t3
+  choices: [t1, t2, t3]
+
+description:
+  type: str
+  help: One-line description for the catalog
+  default: An inference service scaffolded from the golden path.
+
+port:
+  type: int
+  help: Container port the service listens on
+  default: 8000
+
+model_backend:
+  type: str
+  help: >-
+    Embedding backend. `hashing` is deterministic and CPU-only so the service
+    runs on a laptop and in CI; swap in a real model behind the same interface.
+  default: hashing
+  choices: [hashing]
+
+embedding_dim:
+  type: int
+  help: Embedding dimension produced by the model
+  default: 384
+  validator: >-
+    {% if embedding_dim < 16 or embedding_dim > 4096 %}
+    embedding_dim must be between 16 and 4096
+    {% endif %}
+
+max_batch:
+  type: int
+  help: Maximum inputs per request — bounds tail latency and memory per call
+  default: 64

@@ -1,0 +1,12 @@
+# The environment ArgoCD deploys on merge to main. The image tag `main` is a
+# moving pointer that the release workflow advances by digest promotion —
+# the bytes deployed here are the exact bytes tested in the pull request.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: services
+resources:
+  - ../../base
+  - ingress.yaml
+images:
+  - name: ghcr.io/acr86/paved-road/similarity-search
+    newTag: main

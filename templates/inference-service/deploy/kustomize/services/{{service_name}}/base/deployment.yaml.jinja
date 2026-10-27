@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ service_name }}
+  labels:
+    # Opts this workload into the inference policies in policy/kubernetes:
+    # startupProbe, readinessProbe and model provenance become mandatory.
+    pavedroad.dev/workload: inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ service_name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ service_name }}
+        pavedroad.dev/workload: inference
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ port }}"
+        prometheus.io/path: "/metrics"
+        # Model provenance travels with the pod: `kubectl describe` answers
+        # "which model is serving?" without reading code or logs.
+        pavedroad.dev/model: "{{ model_backend }}@v1"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: app
+          image: ghcr.io/acr86/paved-road/{{ service_name }}:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: {{ port }}
+          env:
+            - name: SERVICE_NAME
+              value: {{ service_name }}
+            - name: MODEL_BACKEND
+              value: {{ model_backend }}
+            - name: EMBEDDING_DIM
+              value: "{{ embedding_dim }}"
+            - name: MAX_BATCH
+              value: "{{ max_batch }}"
+            - name: MODEL_CACHE_DIR
+              value: /models
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          # Sized for the CPU default backend. A real model needs its weights
+          # resident in memory: raise both numbers to the model's footprint.
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          # Model loading is absorbed here, not by liveness: up to 30 x 5s =
+          # 150s before the kubelet gives up. Liveness and readiness only start
+          # counting once startup has succeeded.
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            failureThreshold: 3
+          volumeMounts:
+            # The root filesystem is read-only: weights and scratch space get
+            # explicit, size-bounded volumes instead of silently writing to
+            # the container layer.
+            - name: model-cache
+              mountPath: /models
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: model-cache
+          emptyDir:
+            sizeLimit: 2Gi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 256Mi
